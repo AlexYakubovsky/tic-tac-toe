@@ -18,6 +18,7 @@ export const Game = () => {
     let status = `Следующий игрок: ${state.xIsNext ? 'X' : 'O'}`
 
     if (winnerResult) status = `Выиграл ${winnerResult.winner}`
+    if (state.stepNumber > 8) status = 'Ничья!'
 
     const handleClick = i => {
         const history = state.history.slice(0, state.stepNumber + 1)
