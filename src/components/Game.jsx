@@ -11,6 +11,14 @@ export const Game = () => {
         xIsNext: true
     })
 
+    const history = state.history
+    const current = history[state.stepNumber]
+    const winnerResult = calculateWinner(current.squares)
+
+    let status = `Следующий игрок: ${state.xIsNext ? 'X' : 'O'}`
+
+    if (winnerResult) status = `Выиграл ${winnerResult.winner}`
+
     const handleClick = i => {
         const history = state.history.slice(0, state.stepNumber + 1)
         const current = history[history.length - 1]
@@ -30,22 +38,6 @@ export const Game = () => {
         })
     }
 
-    const jumpTo = step => {
-        setState({
-            ...state,
-            stepNumber: step,
-            xIsNext: (step % 2) === 0,
-        })
-    }
-
-    const history = state.history
-    const current = history[state.stepNumber]
-    const winner = calculateWinner(current.squares)
-
-    let status = `Следующий игрок: ${state.xIsNext ? 'X' : 'O'}`
-
-    if (winner) status = `Выиграл ${winner}`
-
     const moves = history.map((step, move) => {
         const desc = move ? `Перейти к ходу #${move}` : 'К началу игры'
 
@@ -56,11 +48,19 @@ export const Game = () => {
         )
     })
 
+    const jumpTo = step => {
+        setState({
+            ...state,
+            stepNumber: step,
+            xIsNext: (step % 2) === 0,
+        })
+    }
+
     return (
         <div className="game">
-            {console.log(state)}
             <div className="game-board">
                 <Board
+                    winnerSquares={winnerResult && winnerResult.winnerSquares}
                     squares={current.squares}
                     handleClick={handleClick}/>
             </div>
