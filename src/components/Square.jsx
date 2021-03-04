@@ -1,10 +1,10 @@
-import React from "react";
-import style from './Board.module.css'
+import React from "react"
+import styles from './Board.module.css'
 
 export const Square = ({handleClick, value, winnerSquare}) => {
     return (
         <button
-            className={`square ${winnerSquare ? `${style.winnerSquare}` : ''}`}
+            className={`square ${winnerSquare ? `${styles.winnerSquare}` : ''}`}
             onClick={handleClick}>
             {value}
         </button>

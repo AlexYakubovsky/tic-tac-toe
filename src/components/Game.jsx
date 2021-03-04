@@ -1,14 +1,18 @@
-import React, {useState} from "react";
-import {Board} from "./Board";
-import {calculateWinner} from "../utils/calculateWinner";
+import React, {useState} from "react"
+import {Board} from "./Board"
+import styles from "./Game.module.css"
+import {calculateWinner} from "../utils/calculateWinner"
 
 export const Game = () => {
     const [state, setState] = useState({
         history: [{
-            squares: Array(9).fill(null)
+            squares: Array(9).fill(null),
+            row: null,
+            column: null
         }],
         stepNumber: 0,
-        xIsNext: true
+        xIsNext: true,
+        active: 0
     })
 
     const history = state.history
@@ -33,18 +37,25 @@ export const Game = () => {
             ...state,
             history: history.concat([{
                 squares: squares,
+                row: Math.floor(i / 3 + 1),
+                column: i % 3 + 1
             }]),
             stepNumber: history.length,
-            xIsNext: !state.xIsNext
+            xIsNext: !state.xIsNext,
+            active: state.stepNumber + 1
         })
     }
 
     const moves = history.map((step, move) => {
-        const desc = move ? `Перейти к ходу #${move}` : 'К началу игры'
+        const desc = move ? `Перейти к ходу #${move} (${step.row}:${step.column})` : 'К началу игры'
 
         return (
             <li key={move}>
-                <button onClick={() => jumpTo(move)}>{desc}</button>
+                <button
+                    className={state.active === move ? styles.active : ''}
+                    onClick={() => jumpTo(move)}>
+                    {desc}
+                </button>
             </li>
         )
     })
@@ -54,6 +65,7 @@ export const Game = () => {
             ...state,
             stepNumber: step,
             xIsNext: (step % 2) === 0,
+            active: step
         })
     }
 
