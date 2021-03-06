@@ -1,6 +1,5 @@
 import React, {useState} from "react"
 import {Board} from "./Board"
-import styles from "./Game.module.css"
 import {calculateWinner} from "../utils/calculateWinner"
 
 export const Game = () => {
@@ -23,7 +22,7 @@ export const Game = () => {
     let status = `Следующий игрок: ${state.xIsNext ? 'X' : 'O'}`
 
     if (winnerResult) status = `Выиграл ${winnerResult.winner}`
-    if (state.stepNumber > 8) status = 'Ничья!'
+    if (state.stepNumber > 8 && !winnerResult) status = 'Ничья!'
 
     const handleClick = i => {
         const history = state.history.slice(0, state.stepNumber + 1)
@@ -53,7 +52,7 @@ export const Game = () => {
         return (
             <li key={move}>
                 <button
-                    className={state.active === move ? styles.active : ''}
+                    className={state.active === move ? 'active' : ''}
                     onClick={() => jumpTo(move)}>
                     {desc}
                 </button>
@@ -79,18 +78,27 @@ export const Game = () => {
     }
 
     return (
-        <div className="game">
-            <div className="game-board">
-                <Board
-                    winnerSquares={winnerResult && winnerResult.winnerSquares}
-                    squares={current.squares}
-                    handleClick={handleClick}/>
+        <>
+            <h2>{status}</h2>
+            <div className="game">
+                <div className="game-board-and-button">
+                    <div className="game-board">
+                        <Board
+                            winnerSquares={winnerResult && winnerResult.winnerSquares}
+                            squares={current.squares}
+                            handleClick={handleClick}/>
+                    </div>
+                    <button
+                        onClick={sortMoves}
+                        disabled={!state.stepNumber}>
+                        Сортировать
+                    </button>
+                </div>
+
+                <div className="game-info">
+                    <ul>{!state.sortMoves ? moves : moves.reverse()}</ul>
+                </div>
             </div>
-            <div className="game-info">
-                <div>{status}</div>
-                <button onClick={sortMoves}>Сортировать</button>
-                <ol>{!state.sortMoves ? moves : moves.reverse()}</ol>
-            </div>
-        </div>
+        </>
     )
 }
