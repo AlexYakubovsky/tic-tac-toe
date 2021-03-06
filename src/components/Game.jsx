@@ -12,7 +12,8 @@ export const Game = () => {
         }],
         stepNumber: 0,
         xIsNext: true,
-        active: 0
+        active: 0,
+        sortMoves: false
     })
 
     const history = state.history
@@ -69,6 +70,14 @@ export const Game = () => {
         })
     }
 
+    const sortMoves = () => {
+        setState({
+            ...state,
+            sortMoves: !state.sortMoves
+        })
+
+    }
+
     return (
         <div className="game">
             <div className="game-board">
@@ -79,7 +88,8 @@ export const Game = () => {
             </div>
             <div className="game-info">
                 <div>{status}</div>
-                <ol>{moves}</ol>
+                <button onClick={sortMoves}>Сортировать</button>
+                <ol>{!state.sortMoves ? moves : moves.reverse()}</ol>
             </div>
         </div>
     )
